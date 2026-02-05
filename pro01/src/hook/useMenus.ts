@@ -22,10 +22,29 @@ export const useMenus = () => {
         }
     };
 
+
+    const updateMenu = async (menuName:string, price: number, stock: number, id: number) => {
+        try {
+            await api.updateMenu({menuName, price, stock ,id})
+            fetchMenus();
+        } catch (e) {
+            console.error("업데이트 실패", e);
+        }
+    }
+
+    const deleteMenu = async (id: number) => {
+        try {
+            await api.deleteMenu(id)
+            fetchMenus();
+        } catch(e) {
+            console.error("삭제 실패", e)
+        }
+    }
+
     useEffect(() => {
         fetchMenus();
     }, []);
 
-    return {menus, addMenu};
+    return {menus, addMenu, updateMenu, deleteMenu};
 
 };
