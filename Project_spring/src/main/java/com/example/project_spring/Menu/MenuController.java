@@ -28,4 +28,21 @@ public class MenuController {
         return ResponseEntity.ok("메뉴 저장 완료!");
     }
 
+    @PutMapping("/menu/{id}")
+    public ResponseEntity<String> update(@RequestBody MenuRequestDTO dto, @PathVariable Long id) {
+
+        ms.updateMenu(dto, id);
+
+        return ResponseEntity.ok("수정 완료!");
+    }
+
+    @DeleteMapping("/menu/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+
+        ms.deleteMenu(id);
+
+        return ResponseEntity.ok(id + " 번 메뉴 삭제 완료");
+
+    }
+
 }

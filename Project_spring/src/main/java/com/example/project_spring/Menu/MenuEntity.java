@@ -10,10 +10,10 @@ public class MenuEntity {
 
     @Id
     @GeneratedValue
-    Long id;
-    String menuName;
-    int price;
-    int stock;
+    private Long id;
+    private String menuName;
+    private int price;
+    private int stock;
 
     public MenuEntity() {}
 
@@ -22,6 +22,16 @@ public class MenuEntity {
         this.menuName = menuName;
         this.price = price;
         this.stock = stock;
+    }
+
+    public void update(String menuName, int price, int stock) {
+
+        if(price < 0) throw new IllegalArgumentException("가격은 0원 이상이어야 합니다");
+
+        this.menuName = menuName;
+        this.price = price;
+        this.stock = stock;
+
     }
 
 
