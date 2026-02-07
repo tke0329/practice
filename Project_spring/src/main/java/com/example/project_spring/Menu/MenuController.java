@@ -20,6 +20,14 @@ public class MenuController {
         return ResponseEntity.ok(list);
     }
 
+    @GetMapping("/menu/{id}")
+    public ResponseEntity<MenuResponseDTO> getMenuById(@PathVariable Long id) {
+        MenuResponseDTO dto = ms.getMenuById(id);
+        return ResponseEntity.ok(dto);
+    }
+
+
+
     @PostMapping("/menu")
     public ResponseEntity<String> addMenu(@RequestBody MenuRequestDTO dto) {
 

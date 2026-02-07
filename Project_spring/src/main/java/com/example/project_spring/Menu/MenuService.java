@@ -22,6 +22,17 @@ public class MenuService {
         mr.save(me);
     }
 
+    public MenuResponseDTO getMenuById(Long id) {
+        MenuEntity me = mr.findById(id)
+                .orElseThrow(() -> new RuntimeException("오류가 존나 터짐 아이디 없음 ㄹ ㅇ"));
+        return new MenuResponseDTO(
+                me.getId(),
+                me.getMenuName(),
+                me.getPrice(),
+                me.getStock()
+        );
+    }
+
     public void deleteMenu(Long id) {
         MenuEntity me = mr.findById(id)
                 .orElseThrow(() -> new RuntimeException("해당 메뉴를 찾을 수 없습니다."));

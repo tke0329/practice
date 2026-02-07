@@ -23,7 +23,7 @@ export const useMenus = () => {
     };
 
 
-    const updateMenu = async (menuName:string, price: number, stock: number, id: number) => {
+    const updateMenu = async (id: number, menuName:string, price: number, stock: number) => {
         try {
             await api.updateMenu({menuName, price, stock ,id})
             fetchMenus();
