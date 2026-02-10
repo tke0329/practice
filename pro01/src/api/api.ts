@@ -20,6 +20,13 @@ export const api = {
     deleteMenu: async (id) => {
         const response = await client.delete(`/menu/${id}`);
         return response.data;
+    },
+
+    addOrder: async (orderData) => {
+        const response = await client.post("/order", orderData);
+        return response.data;
+
+
     }
 
 }

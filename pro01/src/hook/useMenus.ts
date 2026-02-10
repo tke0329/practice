@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react';
 import {api} from '../api/api';
 
+
 export const useMenus = () => {
     const [menus, setMenus] = useState<any[]>([]);
 
@@ -34,8 +35,8 @@ export const useMenus = () => {
 
     const deleteMenu = async (id: number) => {
         try {
-            await api.deleteMenu(id)
-            fetchMenus();
+            await api.deleteMenu(id);
+            await fetchMenus();
         } catch(e) {
             console.error("삭제 실패", e)
         }

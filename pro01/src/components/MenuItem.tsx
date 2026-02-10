@@ -30,7 +30,7 @@ const MenuItem = ({menu, onUpdate, onDelete}: MenuItemProps) => {
                            onChange={(e) => setEditForm({...editForm, stock: Number(e.target.value)})}
                     />
                     <button onClick={handleUpdate}>저장</button>
-                    <button onClick={() => setEditForm(false)}>취소</button>
+                    <button onClick={() => setIsEditing(false)}>취소</button>
                 </div>
             ) : (
                 <div>

@@ -1,7 +1,11 @@
 package com.example.project_spring.Menu;
 
-import jakarta.transaction.Transactional;
+import com.example.project_spring.Category.*;
+import com.example.project_spring.User.*;
+
 import lombok.*;
+
+import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
@@ -12,12 +16,23 @@ import java.util.*;
 public class MenuService {
 
     private final MenuRepository mr;
+    private final CategoryRepository cr;
+    private final UserRepository ur;
+
 
     public void saveMenu(MenuRequestDTO dto) {
+        CategoryEntity category = cr.findByCategoryName(dto.category().name())
+                .orElseThrow(() -> new RuntimeException("해당 카테고리를 찾을 수 없습니다"));
+
+        UserEntity user = ur.findByUsername(dto.writerName())
+                .orElseThrow(() -> new RuntimeException("해당 아이디를 찾을 수 없습니다."));
+
         MenuEntity me = new MenuEntity(
                 dto.menuName(),
                 dto.price(),
-                dto.stock()
+                dto.stock(),
+                category,
+                user
         );
         mr.save(me);
     }
@@ -33,10 +48,11 @@ public class MenuService {
         );
     }
 
+    @Transactional
     public void deleteMenu(Long id) {
         MenuEntity me = mr.findById(id)
                 .orElseThrow(() -> new RuntimeException("해당 메뉴를 찾을 수 없습니다."));
-        mr.delete(me);
+        me.setDeleted(true);
     }
 
     @Transactional
@@ -50,7 +66,7 @@ public class MenuService {
     }
 
     public List<MenuResponseDTO> getAllMenus() {
-        return mr.findAll().stream()
+        return mr.findAllByDeletedFalse().stream()
                 .map((m) -> new MenuResponseDTO(
                         m.getId(),
                         m.getMenuName(),
