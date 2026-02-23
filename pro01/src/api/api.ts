@@ -2,12 +2,12 @@ import client from "./client";
 
 export const api = {
 
-    getMenus: async () => {
-        const response = await client.get('/menu');
+    getMenus: async (url = "/menu") => {
+        const response = await client.get(url);
         return response.data;
     },
 
-    saveMenu: async (menuData: {menuName:string, price:number,stock:number}) => {
+    saveMenu: async (menuData: {menuName:string, price:number, stock:number, category:string}) => {
         const response = await client.post('/menu', menuData);
         return response.data;
     },

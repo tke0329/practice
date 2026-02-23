@@ -1,6 +1,10 @@
 package com.example.project_spring.Menu;
 
+import com.example.project_spring.Category.*;
+import com.example.project_spring.Security.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -13,11 +17,17 @@ import lombok.*;
 public class MenuController {
 
     private final MenuService ms;
+    private final MenuRepository mr;
 
     @GetMapping("/menu")
-    public ResponseEntity<List<MenuResponseDTO>> getMenu() {
-        List<MenuResponseDTO> list = ms.getAllMenus();
-        return ResponseEntity.ok(list);
+    public ResponseEntity<List<MenuResponseDTO>> getMenu(@RequestParam(required = false) CategoryName category) {
+
+        if(category == null) {
+            return ResponseEntity.ok(ms.getAllMenus());
+        }
+
+        return ResponseEntity.ok(ms.getMenusByCategory(category));
+
     }
 
     @GetMapping("/menu/{id}")
@@ -29,10 +39,10 @@ public class MenuController {
 
 
     @PostMapping("/menu")
-    public ResponseEntity<String> addMenu(@RequestBody MenuRequestDTO dto) {
+    public ResponseEntity<String> addMenu(@RequestBody MenuRequestDTO dto, @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        ms.saveMenu(dto);
-
+        Long userId =  userDetails.getUser().getId();
+        ms.saveMenu(dto, userId);
         return ResponseEntity.ok("메뉴 저장 완료!");
     }
 

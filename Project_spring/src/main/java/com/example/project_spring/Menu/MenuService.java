@@ -7,6 +7,7 @@ import lombok.*;
 
 import jakarta.transaction.Transactional;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,12 +21,15 @@ public class MenuService {
     private final UserRepository ur;
 
 
-    public void saveMenu(MenuRequestDTO dto) {
-        CategoryEntity category = cr.findByCategoryName(dto.category().name())
+    @Transactional
+    public void saveMenu(MenuRequestDTO dto, Long userId) {
+
+        CategoryEntity category = cr.findByCategoryName(dto.category())
                 .orElseThrow(() -> new RuntimeException("해당 카테고리를 찾을 수 없습니다"));
 
-        UserEntity user = ur.findByUsername(dto.writerName())
+        UserEntity user = ur.findById(userId)
                 .orElseThrow(() -> new RuntimeException("해당 아이디를 찾을 수 없습니다."));
+
 
         MenuEntity me = new MenuEntity(
                 dto.menuName(),
@@ -37,14 +41,18 @@ public class MenuService {
         mr.save(me);
     }
 
+
     public MenuResponseDTO getMenuById(Long id) {
         MenuEntity me = mr.findById(id)
-                .orElseThrow(() -> new RuntimeException("오류가 존나 터짐 아이디 없음 ㄹ ㅇ"));
+                .orElseThrow(() -> new RuntimeException("오류가 터짐 아이디 없음 ㄹ ㅇ"));
+
         return new MenuResponseDTO(
                 me.getId(),
                 me.getMenuName(),
                 me.getPrice(),
-                me.getStock()
+                me.getStock(),
+                me.getCategory().getCategoryName(),
+                me.getWriter().getUsername()
         );
     }
 
@@ -71,9 +79,26 @@ public class MenuService {
                         m.getId(),
                         m.getMenuName(),
                         m.getPrice(),
-                        m.getStock()))
+                        m.getStock(),
+                        m.getCategory().getCategoryName(),
+                        m.getWriter().getUsername()
+                ))
                 .toList();
 
     }
+
+    public List<MenuResponseDTO> getMenusByCategory(CategoryName categoryName) {
+        return mr.findAllByDeletedFalseAndCategory_CategoryName(categoryName).stream()
+                .map((m) -> new MenuResponseDTO(
+                        m.getId(),
+                        m.getMenuName(),
+                        m.getPrice(),
+                        m.getStock(),
+                        m.getCategory().getCategoryName(),
+                        m.getWriter().getUsername()
+                ))
+                .toList();
+    }
+
 
 }

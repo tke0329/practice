@@ -14,6 +14,7 @@ public class CategoryEntity {
     @Id
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private CategoryName categoryName;
 
     @OneToMany(mappedBy= "category")

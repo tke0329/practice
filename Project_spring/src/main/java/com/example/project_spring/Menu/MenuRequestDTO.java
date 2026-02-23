@@ -7,8 +7,6 @@ public record MenuRequestDTO(
         String menuName,
         int price,
         int stock,
-        CategoryName category,
-        String writerName
-
+        CategoryName category
 ) {
 }

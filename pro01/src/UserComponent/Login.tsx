@@ -1,24 +1,46 @@
 import {useState} from 'react';
-import client from '../api/client';
+import axios from 'axios';
 
-const Login = () => {
+interface LoginProps {
+    onLogin: () => void;
+}
+
+const Login = ({onLogin}: LoginProps) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
     const handleLogin = async () => {
         try {
-            const response = await client.post("/user/login", {
-                username:username,
-                password:password
+
+            const body = new URLSearchParams();
+            body.append("username", username);
+            body.append("password", password);
+
+            await axios.post("http://localhost:8081/api/user/login", body, {
+                headers: {
+                    "Content-Type" : "application/x-www-form-urlencoded"
+                },
+                withCredentials : true
+            })
+
+
+            const meResponse = await axios.get("http://localhost:8081/api/user/me", {
+                withCredentials: true
             });
 
-            const userData = response.data;
-            console.log("로그인 정보: " + userData);
+            const userData = meResponse.data;
 
-            // [2] 브라우저에 저장 (나중에 메뉴 등록할 때 쓰기 위함!)
             localStorage.setItem("user", JSON.stringify(userData));
 
+            console.log("로그인 정보: ", userData);
+
+            // [2] 브라우저에 저장 (나중에 메뉴 등록할 때 쓰기 위함!)
+
+
             alert(`${userData.username}님 환영합니다`);
+
+            onLogin();
+
 
         } catch (e) {
             console.error("문제가 발생했습니다: ", e);
@@ -35,7 +57,7 @@ const Login = () => {
                 onChange={(e) => setUsername(e.target.value)}
                 />
             <input
-                type="text"
+                type="password"
                 placeholder="비밀번호를 입력하세요"
                 onChange={(e) => setPassword(e.target.value)}
             />

@@ -9,6 +9,10 @@ interface MenuListProps {
 
 const MenuList = ({menus, onUpdate, onDelete}: MenuListProps) => {
 
+    if(!menus || !Array.isArray(menus)) {
+        return <p>메뉴를 불러오는 중이거나 메뉴가 없습니다.</p>;
+    }
+
     return (
         <ul>
             {menus.map((menu) => (
