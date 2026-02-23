@@ -37,16 +37,22 @@ const Home = ({onLogout}: LogoutProps) => {
 
 
     return (
-        <div>
+        <div className="panel fade-in">
             {loginUser ? (
-                <div>
-                    <h3>{loginUser.username}님 환영합니다! (권한: {loginUser.role})</h3>
-                    <button onClick={handleLogout}>로그아웃</button>
+                <div className="grid">
+                    <div>
+                        <h2 className="section-title">{loginUser.username}님 환영합니다!</h2>
+                        <div className="badge">권한: {loginUser.role}</div>
+                    </div>
+                    <button className="btn btn-primary" onClick={handleLogout}>로그아웃</button>
                 </div>
             ) : (
-                <div>
-                    <h2>로그인이 필요합니다</h2>
-                    <button onClick={() => window.location.href = "/login"}>로그인 하러 가기</button>
+                <div className="grid">
+                    <h2 className="section-title">로그인이 필요합니다</h2>
+                    <p className="subtle">주문과 메뉴 관리를 위해 로그인해주세요.</p>
+                    <button className="btn btn-primary" onClick={() => window.location.href = "/login"}>
+                        로그인 하러 가기
+                    </button>
                 </div>
             )}
         </div>

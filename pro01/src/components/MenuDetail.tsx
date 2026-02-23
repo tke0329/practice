@@ -27,21 +27,20 @@ const MenuDetail = () => {
 
 
 
-    if(loading) return <div style={{padding: '20px'}}>로딩중...</div>
+    if(loading) return <div className="panel fade-in">로딩중...</div>
 
-    if(!menu) return <div style={{padding: '20px'}}>메뉴 정보가 없습니당</div>
+    if(!menu) return <div className="panel fade-in">메뉴 정보가 없습니당</div>
 
 
     return (
-        <div style={{ padding:'20px', border: '1px solid #ccc', borderRadius: '8px'}}>
-            <h2>메뉴 상세 정보</h2>
-            <hr/>
-            <p><strong>메뉴명:</strong>{menu.menuName}</p>
-            <p><strong>가격:</strong>{menu.price}원</p>
-            <p><strong>재고:</strong>{menu.stock}개</p>
-
-            <button onClick={() => window.history.back()} style={{marginTop: '10px'}}>뒤로가기</button>
-
+        <div className="panel fade-in">
+            <h2 className="section-title">메뉴 상세 정보</h2>
+            <div className="grid">
+                <p><strong>메뉴명:</strong> {menu.menuName}</p>
+                <p><strong>가격:</strong> {menu.price}원</p>
+                <p><strong>재고:</strong> {menu.stock}개</p>
+            </div>
+            <button className="btn btn-ghost" onClick={() => window.history.back()}>뒤로가기</button>
         </div>
     );
 };

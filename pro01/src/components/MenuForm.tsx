@@ -20,33 +20,36 @@ const MenuForm = ({onAdd}: MenuFormProps) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="form" onSubmit={handleSubmit}>
             <input
+                className="input"
                 placeholder="메뉴명을 입력하세요"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
             />
-            <input
-                type="number"
-                value={price}
-                onChange={(e) => setPrice(Number(e.target.value))}
-            />
-            <input
-                type="number"
-                value={stock}
-                onChange={(e) => setStock(Number(e.target.value))}
-            />
-            <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}>
-                <option value="Coffee">Coffee</option>
-                <option value="Tea">Tea</option>
-                <option value="Drink">Drink</option>
-            </select>
-
-
-
-            <button type="submit">메뉴 추가</button>
+            <div className="input-row">
+                <input
+                    className="input"
+                    type="number"
+                    value={price}
+                    onChange={(e) => setPrice(Number(e.target.value))}
+                />
+                <input
+                    className="input"
+                    type="number"
+                    value={stock}
+                    onChange={(e) => setStock(Number(e.target.value))}
+                />
+                <select
+                    className="select"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}>
+                    <option value="Coffee">Coffee</option>
+                    <option value="Tea">Tea</option>
+                    <option value="Drink">Drink</option>
+                </select>
+            </div>
+            <button className="btn btn-primary" type="submit">메뉴 추가</button>
         </form>
     )
 };

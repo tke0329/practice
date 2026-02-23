@@ -17,29 +17,41 @@ const MenuItem = ({menu, onUpdate, onDelete}: MenuItemProps) => {
     };
 
     return (
-        <li>
+        <li className="menu-item">
             {isEditing ? (
-                <div>
-                    <input value={editForm.menuName}
-                           onChange={(e) => setEditForm({...editForm, menuName: e.target.value})}
-                    />
-                    <input value={editForm.price}
-                           onChange={(e) => setEditForm({...editForm, price: Number(e.target.value)})}
-                    />
-                    <input value={editForm.stock}
-                           onChange={(e) => setEditForm({...editForm, stock: Number(e.target.value)})}
-                    />
-                    <button onClick={handleUpdate}>저장</button>
-                    <button onClick={() => setIsEditing(false)}>취소</button>
+                <div className="grid">
+                    <div className="input-row">
+                        <input
+                            className="input"
+                            value={editForm.menuName}
+                            onChange={(e) => setEditForm({...editForm, menuName: e.target.value})}
+                        />
+                        <input
+                            className="input"
+                            value={editForm.price}
+                            onChange={(e) => setEditForm({...editForm, price: Number(e.target.value)})}
+                        />
+                        <input
+                            className="input"
+                            value={editForm.stock}
+                            onChange={(e) => setEditForm({...editForm, stock: Number(e.target.value)})}
+                        />
+                    </div>
+                    <div className="menu-actions">
+                        <button className="btn btn-primary" onClick={handleUpdate}>저장</button>
+                        <button className="btn btn-ghost" onClick={() => setIsEditing(false)}>취소</button>
+                    </div>
                 </div>
             ) : (
-                <div>
+                <>
                     <Link to={`menu/${menu.id}`}>
-                    <strong>{menu.menuName}</strong>
+                        <strong>{menu.menuName}</strong>
                     </Link>
-                    <button style={{marginLeft: '20px'}} onClick={() => setIsEditing(true)}>수정</button>
-                    <button onClick={() => onDelete(menu.id)}>삭제</button>
-                </div>
+                    <div className="menu-actions">
+                        <button className="btn btn-ghost" onClick={() => setIsEditing(true)}>수정</button>
+                        <button className="btn btn-muted" onClick={() => onDelete(menu.id)}>삭제</button>
+                    </div>
+                </>
             )}
         </li>
     );

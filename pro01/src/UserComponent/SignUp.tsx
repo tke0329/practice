@@ -20,21 +20,23 @@ const SignUp = () => {
     }
 
     return (
-        <div>
-            <h2>회원가입 페이지</h2>
-            <input
-                type="text"
-                placeholder="아이디를 입력하세요"
-                onChange={(e) => setUsername(e.target.value)}
-            />
-            <br/>
-            <input
-                type="text"
-                placeholder="비밀번호를 입력하세요"
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <br/>
-            <button onClick={handleSign}>회원가입</button>
+        <div className="panel fade-in">
+            <h2 className="section-title">회원가입</h2>
+            <div className="form">
+                <input
+                    className="input"
+                    type="text"
+                    placeholder="아이디를 입력하세요"
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <input
+                    className="input"
+                    type="password"
+                    placeholder="비밀번호를 입력하세요"
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <button className="btn btn-primary" onClick={handleSign}>회원가입</button>
+            </div>
         </div>
     );
 

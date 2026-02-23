@@ -49,19 +49,23 @@ const Login = ({onLogin}: LoginProps) => {
     }
 
     return (
-        <div>
-            <h2>로그인 페이지</h2>
-            <input
-                type="text"
-                placeholder="아이디를 입력하세요"
-                onChange={(e) => setUsername(e.target.value)}
+        <div className="panel fade-in">
+            <h2 className="section-title">로그인</h2>
+            <div className="form">
+                <input
+                    className="input"
+                    type="text"
+                    placeholder="아이디를 입력하세요"
+                    onChange={(e) => setUsername(e.target.value)}
                 />
-            <input
-                type="password"
-                placeholder="비밀번호를 입력하세요"
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <button onClick={handleLogin}>로그인</button>
+                <input
+                    className="input"
+                    type="password"
+                    placeholder="비밀번호를 입력하세요"
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <button className="btn btn-primary" onClick={handleLogin}>로그인</button>
+            </div>
         </div>
 
     )

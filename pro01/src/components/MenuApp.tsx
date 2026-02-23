@@ -12,23 +12,30 @@ function MenuApp() {
 
 
     return (
-        <div style={{padding: '20px'}}>
-            <h1>메뉴입력</h1>
-
-            {/*입력 폼!!*/}
-            <MenuForm onAdd={addMenu}/>
-            <h3>메뉴 목록</h3>
-            {categories.map((c) => (
-                <button key={c} onClick={() => setSelectedCategory(c)}>{c}
-                </button>
-            ))}
-
-            {/*리스트 출력!!*/}
-            <MenuList
-                menus={menus}
-                onUpdate={updateMenu}
-                onDelete={deleteMenu}
-            />
+        <div className="grid grid-2">
+            <section className="panel fade-in">
+                <h1 className="section-title">메뉴 입력</h1>
+                <MenuForm onAdd={addMenu}/>
+            </section>
+            <section className="panel fade-in">
+                <h2 className="section-title">메뉴 목록</h2>
+                <div className="pill-group">
+                    {categories.map((c) => (
+                        <button
+                            key={c}
+                            className={`pill ${selectedCategory === c ? "active" : ""}`}
+                            onClick={() => setSelectedCategory(c)}
+                        >
+                            {c}
+                        </button>
+                    ))}
+                </div>
+                <MenuList
+                    menus={menus}
+                    onUpdate={updateMenu}
+                    onDelete={deleteMenu}
+                />
+            </section>
         </div>
     )
 }

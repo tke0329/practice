@@ -1,9 +1,14 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {useMenus} from '../hook/useMenus'
 import {api} from '../api/api';
 
 const OrderApp = () => {
-    const {menus} = useMenus();
+
+    const categories = ["All", "Coffee", "Tea", "Drink"];
+
+    const [selectedCategory, setSelectedCategory] = useState("All");
+
+    const {menus} = useMenus(selectedCategory);
     const [cart, setCart] = useState([])
 
     const handleOrder = async () => {
@@ -42,43 +47,53 @@ const OrderApp = () => {
     };
 
     return (
-        <div style={{display: 'flex', gap: '50px'}}>
-            <div>
-                <h1>주문 페이지</h1>
-                {menus.map((m) => (
-                    <div key={m.id}>
-                        {m.menuName} | {m.price}원
-                        <button onClick={() => addToCart(m)}>담기</button>
-                    </div>
-                ))}
-            </div>
+        <div className="order-wrap">
+            <section className="panel fade-in">
+                <h1 className="section-title">주문 페이지</h1>
+                <div className="pill-group">
+                    {categories.map((c) => (
+                        <button
+                            key={c}
+                            className={`pill ${selectedCategory === c ? "active" : ""}`}
+                            onClick={() => setSelectedCategory(c)}
+                        >
+                            {c}
+                        </button>
+                    ))}
+                </div>
+                <div className="menu-list">
+                    {menus.map((m) => (
+                        <div className="menu-item" key={m.id}>
+                            <div>
+                                <strong>{m.menuName}</strong>
+                                <div className="subtle">{m.price}원</div>
+                            </div>
+                            <button className="btn btn-ghost" onClick={() => addToCart(m)}>담기</button>
+                        </div>
+                    ))}
+                </div>
+            </section>
 
-
-            <div style={{background: '#f9f9f9', padding: '20px', minWidth: '200px'}}>
-                <h2>장바구니</h2>
-                {cart.length === 0 ? <p>비어있음</p> : (
+            <aside className="cart-panel fade-in">
+                <h2 className="section-title">장바구니</h2>
+                {cart.length === 0 ? <p className="subtle">비어있음</p> : (
                     cart.map((item, index) => (
-                        <div key={index}>
-                            {item.menuName} x {item.count} ({item.price * item.count}원)
+                        <div className="cart-item" key={index}>
+                            <span>{item.menuName} x {item.count}</span>
+                            <span>{item.price * item.count}원</span>
                         </div>
                     ))
                 )}
                 <hr/>
                 <strong>총액: {cart.reduce((sum, item) => sum + (item.price * item.count), 0)}원</strong>
                 <button
+                    className="btn btn-primary"
                     onClick={handleOrder}
-                    style={{
-                        marginTop: '20px',
-                        padding: '10px 20px',
-                        backgroundColor: "#4CAF50",
-                        color: 'white',
-                        width: '100%',
-                        cursor: 'pointer'
-                    }}
-                >결제 및 주문하기
+                >
+                    결제 및 주문하기
                 </button>
-            </div>
-            </div>
+            </aside>
+        </div>
 
 
     );

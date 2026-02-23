@@ -1,5 +1,5 @@
-import {BrowserRouter, Routes, Route, Link} from 'react-router-dom';
-import {useState, useEffect} from 'react';
+import {BrowserRouter, Routes, Route, Link, Navigate} from 'react-router-dom';
+import {useState, useEffect, JSX, useRef} from 'react';
 import axios from 'axios';
 import MenuApp from './components/MenuApp';
 import MenuDetail from './components/MenuDetail';
@@ -13,6 +13,23 @@ function App() {
     const [user, setUser] = useState<any | null>(null);
 
     const url = "http://localhost:8081/api/user/me";
+
+    const PrivateRoute = ({user, children}: { user: any; children: JSX.Element }) => {
+
+        const alerted = useRef(false);
+
+        useEffect(() => {
+            if (!user && !alerted.current) {
+                alerted.current = true;
+                alert("로그인이 필요합니다");
+            }
+        }, [user]);
+
+        if (!user) {
+            return <Navigate to="/login"/>;
+        }
+        return children;
+    };
 
     const refreshUser = async () => {
         try {
@@ -29,30 +46,47 @@ function App() {
 
     return (
         <BrowserRouter>
-            <nav style={{padding: '10px', borderBottom: '1px solid #ccc'}}>
-                <Link style={{marginRight: '10px'}} to="/home">HOME</Link>
-                <Link style={{marginRight: '10px'}} to="/order">주문</Link>
-                <Link style={{marginRight: '10px'}} to="/list">관리자 메뉴</Link>
-                {user ? (
-                    <span>{user.username} 님 환영합니다 (권한: {user.role})</span>
-                    ) : (
-                    <>
-                    <Link style={{marginRight: '10px', color: "chocolate"}} to="/login">로그인</Link>
-                    <Link style={{color: "#ccc"}} to="/user/sign">회원가입</Link>
-                    </>
-                )}
+            <div className="app-shell">
+                <nav className="topbar">
+                    <div className="brand">BrewLab</div>
+                    <div className="nav-links">
+                        <Link to="/home">HOME</Link>
+                        <Link to="/order">주문</Link>
+                        <Link to="/list">관리자 메뉴</Link>
+                    </div>
+                    <div className="nav-actions">
+                        {user ? (
+                            <span className="greeting">{user.username} 님 환영합니다 (권한: {user.role})</span>
+                        ) : (
+                            <>
+                                <Link to="/login">로그인</Link>
+                                <Link to="/user/sign">회원가입</Link>
+                            </>
+                        )}
+                    </div>
+                </nav>
 
-            </nav>
-
-            <div style={{padding: '20px'}}>
-                <Routes>
-                    <Route path="/home" element={<Home onLogout={refreshUser}/>}/>
-                    <Route path="/list" element={<MenuApp/>}/>
-                    <Route path="/list/menu/:id" element={<MenuDetail/>}/>
-                    <Route path="/order" element={<OrderApp/>}/>
-                    <Route path="/login" element={<Login onLogin={refreshUser}/>}/>
-                    <Route path="/user/sign" element={<SignUp/>}></Route>
-                </Routes>
+                <main className="page">
+                    <Routes>
+                        <Route path="/home" element={<Home onLogout={refreshUser}/>}/>
+                        <Route path="/list" element={
+                            <PrivateRoute user={user}>
+                                <MenuApp/>
+                            </PrivateRoute>
+                        }/>
+                        <Route path="/list/menu/:id" element={
+                            <PrivateRoute user={user}>
+                                <MenuDetail/>
+                            </PrivateRoute>
+                        }/>
+                        <Route path="/order" element={
+                            <PrivateRoute user={user}>
+                                <OrderApp/>
+                            </PrivateRoute>}/>
+                        <Route path="/login" element={<Login onLogin={refreshUser}/>}/>
+                        <Route path="/user/sign" element={<SignUp/>}></Route>
+                    </Routes>
+                </main>
             </div>
         </BrowserRouter>
     );

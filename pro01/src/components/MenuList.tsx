@@ -14,7 +14,7 @@ const MenuList = ({menus, onUpdate, onDelete}: MenuListProps) => {
     }
 
     return (
-        <ul>
+        <ul className="menu-list">
             {menus.map((menu) => (
                 <MenuItem
                     key={menu.id}
