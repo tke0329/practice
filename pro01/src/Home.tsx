@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react';
-import axios from 'axios';
+import client from './api/client';
+
 
 interface LogoutProps {
     onLogout: () => void;
@@ -11,10 +12,9 @@ const Home = ({onLogout}: LogoutProps) => {
 
     const savedUser = async () => {
         try {
-            const res = await axios.get("http://localhost:8081/api/user/me", {
-                withCredentials: true
-            });
+            const res = await client.get("/user/me");
             setLoginUser(res.data);
+
         } catch {
             setLoginUser(null);
         }
@@ -25,9 +25,7 @@ const Home = ({onLogout}: LogoutProps) => {
 
     const handleLogout = async () => {
         try {
-            await axios.post("http://localhost:8081/logout", null, {
-                withCredentials: true
-            });
+            await client.post("/user/logout");
             setLoginUser(null);
             onLogout();
         } catch (e) {

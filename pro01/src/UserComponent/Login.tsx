@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import axios from 'axios';
+import client from '../api/client'
 
 interface LoginProps {
     onLogin: () => void;
@@ -11,26 +11,13 @@ const Login = ({onLogin}: LoginProps) => {
 
     const handleLogin = async () => {
         try {
-
-            const body = new URLSearchParams();
-            body.append("username", username);
-            body.append("password", password);
-
-            await axios.post("http://localhost:8081/api/user/login", body, {
-                headers: {
-                    "Content-Type" : "application/x-www-form-urlencoded"
-                },
-                withCredentials : true
-            })
+            await client.post("/user/login", {username, password})
 
 
-            const meResponse = await axios.get("http://localhost:8081/api/user/me", {
-                withCredentials: true
-            });
+            const meResponse = await client.get("/user/me");
 
             const userData = meResponse.data;
 
-            localStorage.setItem("user", JSON.stringify(userData));
 
             console.log("로그인 정보: ", userData);
 

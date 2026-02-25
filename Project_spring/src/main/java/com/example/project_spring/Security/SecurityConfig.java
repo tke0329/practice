@@ -9,6 +9,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
@@ -16,7 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomUserDetailsService cuds;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -30,24 +35,20 @@ public class SecurityConfig {
                     return corsConfiguration;
                 }))
                 .csrf((csrf) -> csrf.disable())
-                .userDetailsService(cuds)
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/api/user/login", "/api/user/refresh", "/api/user/logout").permitAll()
+                        .requestMatchers("/api/order").authenticated()
                         .requestMatchers("/api/user/me").authenticated()
-                        .requestMatchers("/api/user/login").permitAll()
-                        .requestMatchers("/api/order").permitAll()
                         .requestMatchers("/api/menu/**").authenticated()
-                        .requestMatchers("/logout").permitAll()
                         .anyRequest().permitAll()
-                )
-                .formLogin(form -> form
-                        .loginProcessingUrl("/api/user/login")
-                        .successHandler((req, res, auth) -> res.setStatus(200))
-                        .failureHandler((req, res, ex) -> res.setStatus(401))
                 )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((req, res, e) -> res.setStatus(401))
                         .accessDeniedHandler((req, res, e) -> res.setStatus(403))
-                );
+                )
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
 
 
 
@@ -57,4 +58,9 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
 }

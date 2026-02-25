@@ -7,7 +7,6 @@ const OrderApp = () => {
     const categories = ["All", "Coffee", "Tea", "Drink"];
 
     const [selectedCategory, setSelectedCategory] = useState("All");
-
     const {menus} = useMenus(selectedCategory);
     const [cart, setCart] = useState([])
 
@@ -19,11 +18,7 @@ const OrderApp = () => {
                 menuId: item.id,
                 count: item.count
             }))
-
-
         };
-
-
         try {
             const response = await api.addOrder(orderData);
 
@@ -38,12 +33,18 @@ const OrderApp = () => {
 
 
     const addToCart = (menu) => {
-        setCart([...cart, {
-            id: menu.id,
-            menuName: menu.menuName,
-            price: menu.price,
-            count: 1
-        }]);
+        setCart((prev) => {
+            const found = prev.find((item) => item.id === menu.id);
+            if(found) {
+                return prev.map((item) =>
+                    item.id === menu.id ? {...item, count: item.count + 1} : item
+                );
+            }
+            return [
+                ...prev,
+                {id: menu.id, menuName: menu.menuName, price: menu.price, count: 1 }
+            ];
+        });
     };
 
     return (
